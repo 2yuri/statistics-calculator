@@ -39,7 +39,7 @@ function createTable(arr, nome) {
   const cell6 = row1.insertCell(5);
 
   cell1.innerHTML = nome;
-  cell2.innerHTML = getMedia(arr).toFixed(2);
+  cell2.innerHTML = getMedia(arr);
   cell3.innerHTML = getObj(getModa(arr));
   cell4.innerHTML = getMediana(arr);
   cell6.innerHTML = getMediaInterval(arr);
@@ -48,11 +48,12 @@ function createTable(arr, nome) {
 
 function getMedia(arr) {
   let total = 0;
-  for (let i = 0; i < arr.length - 1; i++) {
+
+  for (let i = 0; i < arr.length; i++) {
     total += arr[i];
   }
 
-  return total / arr.length;
+  return (total / arr.length).toFixed(2);
 }
 
 function getModa(arr) {
