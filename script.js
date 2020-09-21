@@ -1,9 +1,6 @@
 var ar_aluno = [];
-var ar_curso = [];
-var ar_idade = [];
-var ar_peso = [];
-var ar_altura = [];
-var ar_periodo = [];
+var maximo = 0;
+var minimo = 0;
 
 fetch(`./ext/arquivs.txt`).then((res) =>
   res.text().then((data) => {
@@ -12,38 +9,55 @@ fetch(`./ext/arquivs.txt`).then((res) =>
     for (let i = 0; i < array.length - 1; i++) {
       let dados = array[i];
 
-      const [aluno, idade, peso, altura, periodo] = dados.split(" ");
+      const [aluno, rest] = dados.split(" ");
 
       ar_aluno.push(Number(aluno));
-      ar_idade.push(Number(idade));
-      ar_peso.push(Number(peso));
-      ar_altura.push(Number(altura.replace(/,/g, ".")));
-      ar_periodo.push(Number(periodo));
     }
 
-    createTable(ar_altura, "Altura");
-    createTable(ar_idade, "Idade");
-    createTable(ar_peso, "Peso");
-    createTable(ar_periodo, "Periodo");
+    createTable(ar_aluno, "Aluno");
   })
 );
 
 function createTable(arr, nome) {
   const table = document.getElementById("myTable");
-  const row1 = table.insertRow(3);
+  const row1 = table.insertRow(1);
   const cell1 = row1.insertCell(0);
   const cell2 = row1.insertCell(1);
   const cell3 = row1.insertCell(2);
   const cell4 = row1.insertCell(3);
   const cell5 = row1.insertCell(4);
   const cell6 = row1.insertCell(5);
+  const cell7 = row1.insertCell(6);
+  const cell8 = row1.insertCell(7);
+  const cell9 = row1.insertCell(8);
+  const cell10 = row1.insertCell(9);
+  const cell11 = row1.insertCell(10);
+  const cell12 = row1.insertCell(11);
+
+  cell1.classList.add("first");
 
   cell1.innerHTML = nome;
   cell2.innerHTML = getMedia(arr);
   cell3.innerHTML = getObj(getModa(arr));
-  cell4.innerHTML = getMediana(arr);
+  cell4.innerHTML = "ou o do index do meio, ou os 2 do meio dividido por 2";
   cell6.innerHTML = getMediaInterval(arr);
-  cell5.innerHTML = getMediaPosi(arr);
+  cell5.innerHTML = getQuarti1(arr) + getQuarti3(arr) / 2;
+  cell7.innerHTML = getQuarti1(arr);
+  cell8.innerHTML = getQuarti3(arr);
+  cell9.innerHTML = maximo;
+  cell10.innerHTML = minimo;
+  cell11.innerHTML = maximo - minimo;
+  cell12.innerHTML = getSoma(arr);
+}
+
+function getSoma(arr) {
+  let soma = 0;
+
+  for (let i = 0; i < arr.length; i++) {
+    soma += arr[i];
+  }
+
+  return soma;
 }
 
 function getMedia(arr) {
@@ -69,7 +83,7 @@ function getModa(arr) {
 }
 
 function getMediana(arr) {
-  return (arr[29] + arr[30]) / 2;
+  return (arr[30] + arr[29]) / 2;
 }
 
 function getMediaInterval(arr) {
@@ -85,33 +99,41 @@ function getMediaInterval(arr) {
       min = arr[i];
     }
   }
+  maximo = max;
+  minimo = min;
 
   return (max + min) / 2;
 }
 
-function Array_Sort_Numbers(inputarray) {
+function getOrdered(inputarray) {
   return inputarray.sort(function (a, b) {
     return a - b;
   });
 }
 
-const quantile = (arr, q) => {
-  const sorted = Array_Sort_Numbers(arr);
-  const pos = (sorted.length - 1) * q;
-  const base = Math.floor(pos);
-  const rest = pos - base;
-  if (sorted[base + 1] !== undefined) {
-    return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+function getQuartis(arr, q) {
+  const ordered = getOrdered(arr);
+  const position = (ordered.length - 1) * q;
+  const minimum = Math.floor(position);
+  const rest = position - minimum;
+
+  if (ordered[minimum + 1] !== undefined) {
+    return ordered[minimum] + rest * (ordered[minimum + 1] - ordered[minimum]);
   } else {
-    return sorted[base];
+    return ordered[minimum];
   }
-};
+}
 
-function getMediaPosi(array) {
-  const q1 = quantile(array, 0.25);
-  const q3 = quantile(array, 0.75);
+function getQuarti1(array) {
+  const q1 = getQuartis(array, 0.25);
 
-  return (q1 + q3) / 2;
+  return q1;
+}
+
+function getQuarti3(array) {
+  const q3 = getQuartis(array, 0.75);
+
+  return q3;
 }
 
 function getObj(arr) {
@@ -122,7 +144,7 @@ function getObj(arr) {
       propof = prop;
       teste = arr[prop];
     } else if (teste == arr[prop]) {
-      propof = propof + "," + prop;
+      propof = propof + ", " + prop;
       teste = arr[prop];
     }
   }

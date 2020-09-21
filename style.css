@@ -1,19 +1,17 @@
 body {
   display: flex;
-  width: 100%;
   height: 100vh;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-y: hidden;
   align-items: center;
   justify-content: center;
   background: #ddd;
 }
 
 table {
-  margin: 0 120px;
-  border: 1px solid black;
+  background: #ddd;
+  margin-left: 320px;
   border-collapse: collapse;
-  background: #fff;
 }
 
 tr {
@@ -28,27 +26,15 @@ th {
 td,
 th {
   border: 1px solid black;
-  padding: 15px;
-  align-items: flex-start;
 }
 
-input {
-  border: 2px solid black;
-  height: 40px;
-  border-radius: 3px;
-  margin-bottom: 15px;
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-a {
-  margin-bottom: 15px;
-  border: 2px solid black;
-  padding: 15px;
-  color: black;
-  font-size: bold;
-  border-radius: 3px;
-}
-
-a:hover {
-  color: white;
-  background-color: black;
+.row a {
+  text-decoration: none;
+  margin-left: 10px;
 }
